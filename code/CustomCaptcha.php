@@ -1,22 +1,9 @@
 <?php
-/**
- *  MathProtector: The protector implements MathSpamProtection
- *  by returning the required FormField (the MathProtectorField)
- *
- *  uses: the spamprotection mdule
- *
- *  Enable: SpamProtectorManager::set_spam_protector('MathSpamProtector');
- *
- *  20-09-2010
- *  @author: M. Bloem, Balbus Design
- */
-class CustomCaptcha implements SpamProtector {
 
-	/**
-	 * Return the Field that we will use in this protector
-	 *
-	 * @return CustomCaptchaField
-	 */
+class CustomCaptcha implements SpamProtector {
+	
+	// BUILDS CAPTCHA FORM FIELD
+	
 	function getFormField($name = 'Math', $title = '',
 	                      $value = null, $form = null,
 	                      $rightTitle = null) {

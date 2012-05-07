@@ -1,37 +1,23 @@
 <?php
-/**
- *  MathSpamProtectorField: basically a TextField copy with a
- *  fixed maxlength setting, that validates against the
- *  given MathSpamProtection setting
- *
- *  20-09-2010
- *  @author: M. Bloem, Balbus Design
- */
-class CustomCaptchaField extends SpamProtectorField {
 
-	/**
-	 * Creates an input field, class="text" and type="text"
-	 * with a 'fixed label' to which the current
-	 * MathSpamProtection question is added.
-	 */
+class CustomCaptchaField extends SpamProtectorField {
+	
+	// CONSTRUCT FORM FIELD
+	
 	function __construct($name, $title = null, $value = "", $form = null){
 		
 		// initiate captcha
 		include("CustomCaptchaImage.php");
 		$_SESSION['captcha'] = captcha();
 		
-		// add the MathSpamProtection question
-		//$title .= MathSpamProtection::getMathQuestion();
+		// add the label
 		$title = 'Please enter code';
 		
 		parent::__construct($name, $title, $value, $form);
 	}
 
-
-    /*
-     *  These values are copied from the TextField class,
-     *  where only the maxlength and size settings are different
-     */
+	// FORM INPUT CONSTRUCTION
+	
 	function Field() {
 		$attributes = array(
 			'type' => 'text',
@@ -50,13 +36,13 @@ class CustomCaptchaField extends SpamProtectorField {
 		// include javascript behaviours
 		$html .= '<script type="text/javascript" src="customcaptcha/js/effects.js"></script>';
 		
-		// parse code to javascript
+		// parse SHA256'd code to javascript
 		$html .= '<script type="text/javascript">var customCaptchaCode = "'.hash('sha256',$_SESSION['captcha']['code']).'";</script>';
 		
 		// create input field
 		$html .= $this->createTag('input', $attributes);
 		
-		// parse captcha code into customcaptcha session
+		// parse captcha code into CustomCaptcha session
 		$_SESSION['customcaptcha'] = $_SESSION['captcha']['code'];
 		
 		// return html
@@ -65,10 +51,8 @@ class CustomCaptchaField extends SpamProtectorField {
 	}
 
 
-	/*
-	 *  Validation
-	 *  This is used as a backup if javascript is disabled
-	 */
+	// SERVER-SIDE VALIDATION (to ensure a browser with javascript disabled doesn't bypass validation)
+	
 	function validate($validator){
 		
 		$this->value = trim($this->value);
